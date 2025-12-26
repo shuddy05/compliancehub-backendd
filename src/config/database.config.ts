@@ -50,8 +50,17 @@ export const databaseConfig = (): TypeOrmModuleOptions => ({
     ApiKey,
   ],
   synchronize: false,
-  logging: ['error'],
+  logging: process.env.DB_LOGGING === 'true' ? ['error', 'warn', 'log'] : ['error'],
   migrations: ['src/database/migrations/*.ts'],
   migrationsRun: false,
   charset: 'utf8mb4',
+  // Connection pooling and reliability settings
+  poolSize: 10,
+  retryAttempts: 5,
+  retryDelay: 3000, // 3 seconds between retries
+  extra: {
+    connectionLimit: 10,
+    waitForConnections: true,
+    queueLimit: 0,
+  },
 });
