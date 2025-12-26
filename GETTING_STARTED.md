@@ -168,7 +168,7 @@ curl -X POST http://localhost:3000/api/v1/subscriptions/plans \
 ## 📁 Project Files Overview
 
 ### Key Files
-- **src/main.ts** - Application entry point
+- **src/app.ts** - Application entry point
 - **src/app.module.ts** - Root module that imports all feature modules
 - **.env** - Environment configuration (database, JWT secrets)
 - **package.json** - Project dependencies and scripts

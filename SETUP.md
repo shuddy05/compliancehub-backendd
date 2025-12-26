@@ -143,7 +143,7 @@ src/
 ├── app.module.ts                    # Root application module
 ├── app.controller.ts                # Root controller
 ├── app.service.ts                   # Root service
-└── main.ts                          # Application entry point
+└── app.ts                           # Application entry point
 
 .env                                 # Environment configuration (create from .env.example)
 .env.example                         # Environment template

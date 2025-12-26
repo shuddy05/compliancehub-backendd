@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "nest start --watch",
     "build": "nest build",
-    "start": "nest start",
+    "start": "node app.js",
+    "start:prod": "node app.js",
     "start:dev": "nest start --watch",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.ts\""

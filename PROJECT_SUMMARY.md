@@ -102,7 +102,7 @@ compliancehub/
 │   ├── app.module.ts                       # Root module
 │   ├── app.controller.ts                   # Root controller
 │   ├── app.service.ts                      # Root service
-│   └── main.ts                             # Entry point
+│   └── app.ts                              # Entry point
 │
 ├── .env                                    # Development environment
 ├── .env.example                            # Environment template

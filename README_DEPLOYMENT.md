@@ -268,7 +268,7 @@ src/
 ├── app.controller.ts          # Main controller
 ├── app.module.ts              # Root module
 ├── app.service.ts             # Main service
-├── main.ts                    # Application entry point
+├── app.ts                     # Application entry point
 ├── common/
 │   ├── decorators/            # Custom decorators
 │   ├── guards/                # Authentication guards

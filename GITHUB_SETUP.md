@@ -128,7 +128,7 @@ compliancehub-api/
 │   ├── app.controller.ts
 │   ├── app.module.ts
 │   ├── app.service.ts
-│   ├── main.ts
+│   ├── app.ts
 │   ├── common/
 │   │   ├── decorators/
 │   │   ├── guards/
