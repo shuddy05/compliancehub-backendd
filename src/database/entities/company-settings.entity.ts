@@ -40,7 +40,7 @@ export class CompanySettings {
   @Column({ type: 'varchar', length: 255, nullable: true })
   complianceOfficerEmail: string;
 
-  @Column({ type: 'simple-json', default: '[7, 3, 1]' })
+  @Column({ type: 'simple-json', nullable: true })
   deadlineReminderDays: number[];
 
   @Column({ type: 'boolean', default: false })

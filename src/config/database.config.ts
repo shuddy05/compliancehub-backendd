@@ -49,7 +49,7 @@ export const databaseConfig = (): TypeOrmModuleOptions => ({
     Reminder,
     ApiKey,
   ],
-  synchronize: false,
+  synchronize: process.env.DB_SYNCHRONIZE === 'true',
   logging: process.env.DB_LOGGING === 'true' ? ['error', 'warn', 'log'] : ['error'],
   migrations: ['src/database/migrations/*.ts'],
   migrationsRun: false,
