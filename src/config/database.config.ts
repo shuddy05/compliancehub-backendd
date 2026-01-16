@@ -19,6 +19,8 @@ import { PaymentTransaction } from '../database/entities/payment-transaction.ent
 import { TaxRelief } from '../database/entities/tax-relief.entity';
 import { Reminder } from '../database/entities/reminder.entity';
 import { ApiKey } from '../database/entities/api-key.entity';
+import { EmailVerificationToken } from '../database/entities/email-verification-token.entity';
+import { SupportTicket, TicketMessage } from '../modules/support/support.entity';
 
 export const databaseConfig = (): TypeOrmModuleOptions => ({
   type: 'mysql',
@@ -48,6 +50,9 @@ export const databaseConfig = (): TypeOrmModuleOptions => ({
     TaxRelief,
     Reminder,
     ApiKey,
+    EmailVerificationToken,
+    SupportTicket,
+    TicketMessage,
   ],
   synchronize: process.env.DB_SYNCHRONIZE === 'true',
   logging: process.env.DB_LOGGING === 'true' ? ['error', 'warn', 'log'] : ['error'],
@@ -62,5 +67,10 @@ export const databaseConfig = (): TypeOrmModuleOptions => ({
     connectionLimit: 10,
     waitForConnections: true,
     queueLimit: 0,
+    connectTimeout: 30000, // 30 seconds connection timeout
+    acquireTimeout: 30000, // 30 seconds acquire timeout
+    timeout: 40000, // 40 seconds query timeout
+    enableKeepAlive: true,
+    keepAliveInitialDelayMs: 0,
   },
 });

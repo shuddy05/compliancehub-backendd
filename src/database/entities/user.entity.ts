@@ -47,6 +47,12 @@ export class User {
   @Column({ type: 'boolean', default: false })
   twoFactorEnabled: boolean;
 
+  @Column({ type: 'text', nullable: true })
+  totpSecret: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  totpTempSecret: string | null;
+
   @Column({ type: 'timestamp', nullable: true })
   lastLogin: Date;
 

@@ -31,8 +31,8 @@ export class CompaniesService {
 
     // Add creator as super_admin
     const companyUser = this.companyUserRepository.create({
-      company: savedCompany,
-      user: { id: userId },
+      companyId: savedCompany.id,
+      userId: userId,
       role: 'super_admin',
       isPrimaryCompany: true,
       acceptedAt: new Date(),
@@ -91,6 +91,33 @@ export class CompaniesService {
         isActive: c.isActive,
       })),
       total: companies.length,
+      skip,
+      take,
+    };
+  }
+
+  /**
+   * Get all companies in the system (admin only)
+   */
+  async findAll(skip: number = 0, take: number = 10) {
+    const [companies, total] = await this.companyRepository.findAndCount({
+      skip,
+      take,
+      order: { createdAt: 'DESC' },
+    });
+
+    return {
+      data: companies.map((c) => ({
+        id: c.id,
+        name: c.name,
+        tin: c.tin,
+        industry: c.industry,
+        subscriptionTier: c.subscriptionTier,
+        subscriptionStatus: c.subscriptionStatus,
+        isActive: c.isActive,
+        createdAt: c.createdAt,
+      })),
+      total,
       skip,
       take,
     };

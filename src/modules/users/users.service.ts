@@ -4,7 +4,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, MoreThan } from 'typeorm';
 import { User } from '../../database/entities/user.entity';
 import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
 import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
@@ -19,7 +19,7 @@ export class UsersService {
   async findById(id: string) {
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: ['companyUsers'],
+      relations: ['companyUsers', 'companyUsers.company'],
     });
 
     if (!user) {
@@ -35,7 +35,7 @@ export class UsersService {
     const [users, total] = await this.userRepository.findAndCount({
       take: limitNum,
       skip: offsetNum,
-      relations: ['companyUsers'],
+      relations: ['companyUsers', 'companyUsers.company'],
     });
 
     return {
@@ -77,5 +77,66 @@ export class UsersService {
 
     user.isActive = false;
     return this.userRepository.save(user);
+  }
+
+  async findAllForAdmin(skip: number = 0, take: number = 10) {
+    const [users, total] = await this.userRepository.findAndCount({
+      skip,
+      take,
+      order: { createdAt: 'DESC' },
+      relations: ['companyUsers', 'companyUsers.company'],
+    });
+
+    // Count users created in the last 7 days
+    const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const newThisWeek = await this.userRepository.countBy({
+      createdAt: MoreThan(weekAgo),
+    });
+
+    return {
+      data: users.map((user) => ({
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phone: user.phone,
+        createdAt: user.createdAt,
+        isActive: user.isActive,
+      })),
+      total,
+      newThisWeek,
+      skip,
+      take,
+    };
+  }
+
+  async findSupportStaff(skip: number = 0, take: number = 10) {
+    const [users, total] = await this.userRepository.findAndCount({
+      skip,
+      take,
+      order: { createdAt: 'DESC' },
+      relations: ['companyUsers', 'companyUsers.company'],
+      where: {
+        companyUsers: {
+          role: 'support_staff',
+        },
+      },
+    });
+
+    return {
+      data: users.map((user) => ({
+        id: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phone: user.phone,
+        createdAt: user.createdAt,
+        isActive: user.isActive,
+        role: 'support_staff',
+      })),
+      total,
+      skip,
+      take,
+    };
   }
 }

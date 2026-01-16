@@ -12,6 +12,8 @@ import {
 } from '@nestjs/common';
 import { CompaniesService } from './companies.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { RequiredRoles } from '../../common/decorators/roles.decorator';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 
@@ -36,6 +38,17 @@ export class CompaniesController {
   @Get()
   async findAll(@Request() req, @Query('skip') skip: number = 0, @Query('take') take: number = 10) {
     return this.companiesService.findAllForUser(req.user.id, skip, take);
+  }
+
+  /**
+   * Get all companies in the system (super_admin only)
+   * GET /api/v1/companies/admin/all
+   */
+  @Get('admin/all')
+  @UseGuards(RolesGuard)
+  @RequiredRoles('super_admin')
+  async getAllCompanies(@Query('skip') skip: number = 0, @Query('take') take: number = 10) {
+    return this.companiesService.findAll(skip, take);
   }
 
   /**

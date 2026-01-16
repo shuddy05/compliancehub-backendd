@@ -6,10 +6,23 @@ import {
   Body,
   Param,
   UseGuards,
+  Req,
   Request,
 } from '@nestjs/common';
 import { SubscriptionsService } from './subscriptions.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { InitiatePaymentDto } from './dto/initiate-payment.dto';
+import * as crypto from 'crypto';
+import { Query } from '@nestjs/common';
+
+import { CanActivate, ExecutionContext } from '@nestjs/common';
+
+// Public guard used for webhook endpoints
+class PublicGuard implements CanActivate {
+  canActivate(context: ExecutionContext): boolean {
+    return true;
+  }
+}
 
 @Controller('subscriptions')
 @UseGuards(JwtAuthGuard)
@@ -17,16 +30,38 @@ export class SubscriptionsController {
   constructor(private subscriptionsService: SubscriptionsService) {}
 
   /**
+   * Create a new subscription for a company
+   * POST /api/v1/subscriptions
+   */
+  @Post()
+  async createSubscription(
+    @Body()
+    createDto: {
+      companyId: string;
+      planId: string;
+      billingCycle: string;
+    },
+    @Request() req,
+  ) {
+    return this.subscriptionsService.createSubscription(
+      createDto.companyId,
+      createDto.planId,
+      createDto.billingCycle,
+      req.user.id,
+    );
+  }
+
+  /**
    * Get current subscription for a company
-   * GET /api/v1/subscriptions/current
+   * GET /api/v1/subscriptions/current?companyId=<companyId>
    */
   @Get('current')
   async getCurrentSubscription(
     @Request() req,
-    @Body() body: { companyId: string },
+    @Query('companyId') companyId: string,
   ) {
     return this.subscriptionsService.getCurrentSubscription(
-      body.companyId,
+      companyId,
       req.user.id,
     );
   }
@@ -112,6 +147,87 @@ export class SubscriptionsController {
   @Get('plans')
   async getPlans() {
     return this.subscriptionsService.getPlans();
+  }
+
+  /**
+   * Initiate payment: create pending subscription + payment transaction and return reference
+   * POST /api/v1/subscriptions/initiate-payment
+   */
+  @Post('initiate-payment')
+  async initiatePayment(@Body() dto: InitiatePaymentDto, @Req() req) {
+    return this.subscriptionsService.initiatePayment(
+      dto.companyId,
+      dto.planName,
+      dto.billingCycle,
+      req.user.id,
+      dto.customerEmail,
+      dto.customerFirstName,
+      dto.customerLastName,
+      dto.customerPhone,
+    );
+  }
+
+  /**
+   * Webhook endpoint for Paystack (unprotected)
+   * POST /api/v1/subscriptions/webhook
+   */
+  @Post('webhook')
+  @UseGuards(PublicGuard)
+  async handleWebhook(@Req() req) {
+    // raw body should be available as req.rawBody if express raw middleware is configured.
+    // Fallback to stringified body for signature verification.
+    const paystackSignature = req.headers['x-paystack-signature'] as string;
+    const secret = process.env.PAYSTACK_SECRET_KEY;
+
+    if (!secret) {
+      // Log and return 400 so maintainers know config is missing
+      return { ok: false, message: 'PAYSTACK_SECRET_KEY not configured' };
+    }
+
+    const raw = (req as any).rawBody
+      ? (req as any).rawBody
+      : JSON.stringify(req.body);
+
+    const hash = crypto.createHmac('sha512', secret).update(raw).digest('hex');
+
+    if (hash !== paystackSignature) {
+      return { ok: false, message: 'Invalid signature' };
+    }
+
+    const event = req.body?.event;
+    const data = req.body?.data;
+
+    // For transaction success events, update payment and subscription
+    if (event === 'charge.success' || event === 'transaction.success' || (data && data.status === 'success')) {
+      const reference = data?.reference || data?.trxref || data?.reference_no;
+      if (reference) {
+        // let service handle update
+        try {
+          await this.subscriptionsService.handlePaymentSuccess(reference, data);
+          return { ok: true };
+        } catch (err) {
+          return { ok: false, message: (err as Error).message };
+        }
+      }
+    }
+
+    return { ok: true };
+  }
+
+  /**
+   * Public endpoint to check payment/subscription status by reference.
+   * GET /api/v1/subscriptions/status?reference=<ref>
+   */
+  @Get('status')
+  @UseGuards(PublicGuard)
+  async getStatus(@Query('reference') reference: string) {
+    if (!reference) return { ok: false, message: 'reference required' };
+    try {
+      const result = await this.subscriptionsService.getPaymentStatus(reference);
+      return { ok: true, ...result };
+    } catch (err) {
+      return { ok: false, message: (err as Error).message };
+    }
   }
 
   /**

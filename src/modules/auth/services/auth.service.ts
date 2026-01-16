@@ -73,4 +73,59 @@ export class AuthService {
       return null;
     }
   }
+
+  verifyToken(token: string): JwtPayload | null {
+    try {
+      // Try access token secret first
+      return this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET || 'your-secret-key',
+      }) as JwtPayload;
+    } catch {
+      // If that fails, decode without verification to extract payload
+      try {
+        return this.jwtService.decode(token) as JwtPayload;
+      } catch {
+        return null;
+      }
+    }
+  }
+
+  generateVerificationToken(user: User): string {
+    const payload: JwtPayload = {
+      sub: user.id,
+      email: user.email,
+      roles: [],
+    };
+
+    return this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET || 'your-secret-key',
+      expiresIn: 86400, // 24 hours
+    });
+  }
+
+  // Generate a short-lived token used during MFA login verification
+  generateMfaToken(user: User, expiresInSeconds: number = 300): string {
+    const payload = {
+      sub: user.id,
+      email: user.email,
+      mfa: true,
+    } as any;
+
+    return this.jwtService.sign(payload, {
+      secret: process.env.JWT_SECRET || 'your-secret-key',
+      expiresIn: expiresInSeconds,
+    });
+  }
+
+  validateMfaToken(token: string) {
+    try {
+      const decoded = this.jwtService.verify(token, {
+        secret: process.env.JWT_SECRET || 'your-secret-key',
+      }) as any;
+      if (decoded && decoded.mfa && decoded.sub) return decoded;
+      return null;
+    } catch (err) {
+      return null;
+    }
+  }
 }

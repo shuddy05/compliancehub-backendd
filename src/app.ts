@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import * as express from 'express';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 
@@ -30,6 +31,9 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  // Ensure webhook route can access raw body for signature verification
+  app.use('/api/v1/subscriptions/webhook', express.raw({ type: '*/*' }));
 
   const port = process.env.PORT || 3000;
   await app.listen(port);

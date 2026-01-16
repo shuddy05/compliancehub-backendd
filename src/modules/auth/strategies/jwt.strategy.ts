@@ -14,6 +14,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   validate(payload: JwtPayload): JwtPayload {
-    return payload;
+    // Ensure controllers can read `req.user.id` by mapping `sub` to `id`
+    return Object.assign({ id: payload.sub }, payload) as JwtPayload & { id: string };
   }
 }

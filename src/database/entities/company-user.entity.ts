@@ -33,7 +33,7 @@ export class CompanyUser {
   user: User;
 
   @Column({ type: 'varchar', length: 50 })
-  role: string; // super_admin, company_admin, accountant, staff, read_only
+  role: string; // super_admin, company_admin, accountant, staff, support_staff, read_only
 
   @Column({ type: 'simple-json', nullable: true })
   permissions: Record<string, Record<string, boolean>>;

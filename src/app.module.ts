@@ -13,6 +13,7 @@ import { ComplianceModule } from './modules/compliance/compliance.module';
 import { DocumentsModule } from './modules/documents/documents.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
+import { SupportModule } from './modules/support/support.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { SubscriptionsModule } from './modules/subscriptions/subscriptions.modul
     DocumentsModule,
     NotificationsModule,
     SubscriptionsModule,
+    SupportModule,
   ],
   controllers: [AppController],
   providers: [AppService],

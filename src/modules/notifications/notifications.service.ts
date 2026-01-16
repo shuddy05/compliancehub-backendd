@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Notification } from '../../database/entities/notification.entity';
 import { User } from '../../database/entities/user.entity';
+import { CompanyUser } from '../../database/entities/company-user.entity';
 
 @Injectable()
 export class NotificationsService {
@@ -11,6 +12,8 @@ export class NotificationsService {
     private notificationRepository: Repository<Notification>,
     @InjectRepository(User)
     private userRepository: Repository<User>,
+    @InjectRepository(CompanyUser)
+    private companyUserRepository: Repository<CompanyUser>,
   ) {}
 
   /**
@@ -212,6 +215,7 @@ export class NotificationsService {
     actionUrl?: string,
     channels?: string[],
     priority?: string,
+    companyId?: string,
   ) {
     const user = await this.userRepository.findOne({ where: { id: userId } });
 
@@ -219,8 +223,28 @@ export class NotificationsService {
       throw new NotFoundException('User not found');
     }
 
+    // If companyId not provided, try to fetch from user's primary company
+    let finalCompanyId = companyId;
+    if (!finalCompanyId) {
+      try {
+        const companyUser = await this.companyUserRepository.findOne({
+          where: { userId, isPrimaryCompany: true },
+        });
+        finalCompanyId = companyUser?.companyId;
+      } catch (error) {
+        console.error('Failed to fetch user company:', error);
+      }
+    }
+
+    // If still no company ID, we cannot create notification (required field)
+    if (!finalCompanyId) {
+      console.warn(`Cannot create notification for user ${userId} - no company ID found`);
+      return null;
+    }
+
     const notification = new Notification();
     notification.userId = userId;
+    notification.companyId = finalCompanyId;
     notification.notificationType = notificationType;
     notification.title = title;
     notification.message = message;

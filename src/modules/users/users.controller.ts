@@ -31,7 +31,7 @@ export class UsersController {
 
   @Get()
   @UseGuards(RolesGuard)
-  @RequiredRoles('admin', 'manager')
+  @RequiredRoles('admin', 'manager', 'super_admin')
   async getAllUsers(@Query('limit') limit = '10', @Query('offset') offset = '0') {
     return this.usersService.findAll(limit, offset);
   }
@@ -52,8 +52,28 @@ export class UsersController {
 
   @Delete(':id')
   @UseGuards(RolesGuard)
-  @RequiredRoles('company_admin')
+  @RequiredRoles('company_admin', 'super_admin')
   async deleteUser(@Param('id') id: string) {
     return this.usersService.delete(id);
+  }
+
+  @Get('admin/all')
+  @UseGuards(RolesGuard)
+  @RequiredRoles('super_admin')
+  async getAllUsersForAdmin(
+    @Query('skip') skip: number = 0,
+    @Query('take') take: number = 10,
+  ) {
+    return this.usersService.findAllForAdmin(skip, take);
+  }
+
+  @Get('admin/support-staff')
+  @UseGuards(RolesGuard)
+  @RequiredRoles('super_admin')
+  async getSupportStaff(
+    @Query('skip') skip: number = 0,
+    @Query('take') take: number = 10,
+  ) {
+    return this.usersService.findSupportStaff(skip, take);
   }
 }
