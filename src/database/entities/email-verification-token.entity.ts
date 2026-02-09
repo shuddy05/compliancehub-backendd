@@ -29,9 +29,10 @@ export class EmailVerificationToken {
   @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   expiresAt: Date;
 
   @Column({ type: 'boolean', default: false })
   used: boolean;
 }
+

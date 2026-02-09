@@ -10,6 +10,8 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 import { LearningProgress } from './learning-progress.entity';
+import { LearningBookmark } from './learning-bookmark.entity';
+import { LearningFeedback } from './learning-feedback.entity';
 
 @Entity('learning_content')
 export class LearningContent {
@@ -32,6 +34,15 @@ export class LearningContent {
   body: string;
 
   @Column({ type: 'text', nullable: true })
+  description: string;
+
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  duration: string; // e.g., "12 min"
+
+  @Column({ type: 'varchar', length: 500, nullable: true })
+  thumbnail: string; // path to thumbnail image
+
+  @Column({ type: 'text', nullable: true })
   videoUrl: string;
 
   @Column({ type: 'varchar', length: 20, nullable: true })
@@ -52,7 +63,10 @@ export class LearningContent {
   @Column({ type: 'boolean', default: false })
   isPublished: boolean;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'boolean', default: false })
+  featured: boolean;
+
+  @Column({ type: 'datetime', nullable: true })
   publishedAt: Date;
 
   @Column({ type: 'uuid', nullable: true })
@@ -71,4 +85,11 @@ export class LearningContent {
   // Relations
   @OneToMany(() => LearningProgress, (lp) => lp.content, { cascade: true })
   learningProgress: LearningProgress[];
+
+  @OneToMany(() => LearningBookmark, (bookmark) => bookmark.content, { cascade: true })
+  bookmarks: LearningBookmark[];
+
+  @OneToMany(() => LearningFeedback, (feedback) => feedback.content, { cascade: true })
+  feedbacks: LearningFeedback[];
 }
+

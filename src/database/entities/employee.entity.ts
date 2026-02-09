@@ -130,3 +130,4 @@ export class Employee {
   @OneToMany(() => TaxRelief, (tr) => tr.employee, { cascade: true })
   taxReliefs: TaxRelief[];
 }
+

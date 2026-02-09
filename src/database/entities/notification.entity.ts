@@ -43,22 +43,22 @@ export class Notification {
   @Column({ type: 'simple-json', nullable: true })
   channels: { email: boolean; sms: boolean; push: boolean; whatsapp: boolean };
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   emailSentAt: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   smsSentAt: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   pushSentAt: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   whatsappSentAt: Date;
 
   @Column({ type: 'boolean', default: false })
   isRead: boolean;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   readAt: Date;
 
   @Column({ type: 'boolean', default: false })
@@ -70,3 +70,4 @@ export class Notification {
   @CreateDateColumn()
   createdAt: Date;
 }
+

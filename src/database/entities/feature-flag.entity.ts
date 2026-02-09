@@ -41,3 +41,4 @@ export class FeatureFlag {
   @UpdateDateColumn()
   updatedAt: Date;
 }
+

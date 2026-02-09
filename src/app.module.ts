@@ -14,6 +14,7 @@ import { DocumentsModule } from './modules/documents/documents.module';
 import { NotificationsModule } from './modules/notifications/notifications.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { SupportModule } from './modules/support/support.module';
+import { LearningModule } from './modules/learning/learning.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { SupportModule } from './modules/support/support.module';
     NotificationsModule,
     SubscriptionsModule,
     SupportModule,
+    LearningModule,
   ],
   controllers: [AppController],
   providers: [AppService],

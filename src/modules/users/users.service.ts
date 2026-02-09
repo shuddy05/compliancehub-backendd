@@ -6,7 +6,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, MoreThan } from 'typeorm';
 import { User } from '../../database/entities/user.entity';
-import { CreateUserDto, UpdateUserDto } from './dto/user.dto';
+import { CreateUserDto, UpdateUserDto, UserResponseDto, CompanyUserResponseDto, CompanyResponseDto } from './dto/user.dto';
 import { JwtPayload } from '../auth/interfaces/jwt-payload.interface';
 
 @Injectable()
@@ -16,17 +16,61 @@ export class UsersService {
     private userRepository: Repository<User>,
   ) {}
 
-  async findById(id: string) {
+  private toUserResponseDto(user: User): UserResponseDto {
+    return {
+      id: user.id,
+      email: user.email,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      phone: user.phone,
+      avatarUrl: user.avatarUrl,
+      emailVerified: user.emailVerified,
+      twoFactorEnabled: user.twoFactorEnabled,
+      preferredLanguage: user.preferredLanguage,
+      darkModeEnabled: user.darkModeEnabled,
+      onboardingCompleted: user.onboardingCompleted,
+      onboardingStep: user.onboardingStep,
+      isActive: user.isActive,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+      companyUsers: (user.companyUsers || []).map(cu => ({
+        id: cu.id,
+        companyId: cu.companyId,
+        role: cu.role,
+        isPrimaryCompany: cu.isPrimaryCompany,
+        isActive: cu.isActive,
+        company: {
+          id: cu.company.id,
+          name: cu.company.name,
+          industry: cu.company.industry,
+          employeeCount: cu.company.employeeCount,
+          subscriptionTier: cu.company.subscriptionTier,
+          subscriptionStatus: cu.company.subscriptionStatus,
+        } as CompanyResponseDto,
+      } as CompanyUserResponseDto)),
+    };
+  }
+
+  async findById(id: string): Promise<UserResponseDto> {
     const user = await this.userRepository.findOne({
       where: { id },
-      relations: ['companyUsers', 'companyUsers.company'],
+      relations: {
+        companyUsers: {
+          company: true,
+        },
+      },
     });
 
     if (!user) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
 
-    return user;
+    // Ensure companyUsers is always an array
+    if (!user.companyUsers) {
+      user.companyUsers = [];
+    }
+
+    return this.toUserResponseDto(user);
   }
 
   async findAll(limit: string | number, offset: string | number) {

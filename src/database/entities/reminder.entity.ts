@@ -42,7 +42,7 @@ export class Reminder {
   @Column({ type: 'integer', default: 3 })
   remindDaysBefore: number;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'datetime' })
   scheduledFor: Date;
 
   @Column({ type: 'simple-json', nullable: true })
@@ -54,7 +54,7 @@ export class Reminder {
   @Column({ type: 'varchar', length: 50, default: 'pending' })
   status: string; // pending, sent, failed, cancelled
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   sentAt: Date;
 
   @Column({ type: 'text', nullable: true })
@@ -63,3 +63,4 @@ export class Reminder {
   @CreateDateColumn()
   createdAt: Date;
 }
+

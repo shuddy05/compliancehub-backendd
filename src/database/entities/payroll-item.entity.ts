@@ -72,7 +72,7 @@ export class PayrollItem {
   @Column({ type: 'varchar', length: 100, nullable: true })
   paymentReference: string;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   paymentDate: Date;
 
   @Column({ type: 'decimal', precision: 15, scale: 2, default: 0 })
@@ -87,3 +87,4 @@ export class PayrollItem {
   @CreateDateColumn()
   createdAt: Date;
 }
+

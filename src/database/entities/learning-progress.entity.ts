@@ -43,13 +43,13 @@ export class LearningProgress {
   @Column({ type: 'integer', default: 0 })
   progressPercentage: number;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   completedAt: Date;
 
   @Column({ type: 'integer', default: 0 })
   timeSpent: number; // seconds
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'datetime' })
   lastViewedAt: Date;
 
   @Column({ type: 'boolean', default: false })
@@ -58,3 +58,4 @@ export class LearningProgress {
   @CreateDateColumn()
   createdAt: Date;
 }
+

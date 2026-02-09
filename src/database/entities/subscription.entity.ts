@@ -35,10 +35,10 @@ export class Subscription {
   @Column({ type: 'varchar', length: 3, default: 'NGN' })
   currency: string;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'datetime' })
   periodStart: Date;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'datetime' })
   periodEnd: Date;
 
   @Column({ type: 'varchar', length: 50 })
@@ -47,7 +47,7 @@ export class Subscription {
   @Column({ type: 'boolean', default: false })
   cancelAtPeriodEnd: boolean;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   cancelledAt: Date;
 
   @Column({ type: 'text', nullable: true })
@@ -59,7 +59,7 @@ export class Subscription {
   @Column({ type: 'varchar', length: 255, nullable: true })
   paymentReference: string;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   paidAt: Date;
 
   @CreateDateColumn()
@@ -69,3 +69,4 @@ export class Subscription {
   @OneToMany(() => PaymentTransaction, (pt) => pt.subscription)
   paymentTransactions: PaymentTransaction[];
 }
+

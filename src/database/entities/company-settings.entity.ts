@@ -70,3 +70,4 @@ export class CompanySettings {
   @UpdateDateColumn()
   updatedAt: Date;
 }
+

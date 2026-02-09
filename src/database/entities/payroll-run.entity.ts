@@ -46,7 +46,7 @@ export class PayrollRun {
   @JoinColumn({ name: 'approvedById' })
   approvedBy: User;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   approvedAt: Date;
 
   @Column({ type: 'decimal', precision: 15, scale: 2, default: 0 })
@@ -99,3 +99,4 @@ export class PayrollRun {
   @OneToMany(() => PayrollItem, (pi) => pi.payrollRun, { cascade: true })
   payrollItems: PayrollItem[];
 }
+

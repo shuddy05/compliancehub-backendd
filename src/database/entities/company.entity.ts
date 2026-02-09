@@ -69,22 +69,22 @@ export class Company {
   @Column({ type: 'varchar', length: 20, default: 'active' })
   subscriptionStatus: string; // active, trial, suspended, cancelled
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   trialEndAt: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   billingPeriodStart: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   billingPeriodEnd: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   nextBillingDate: Date;
 
   @Column({ type: 'integer', default: 0 })
   paymentRetryCount: number;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   gracePeriodEnd: Date;
 
   // Settings
@@ -157,3 +157,4 @@ export class Company {
   @OneToMany(() => PaymentTransaction, (pt) => pt.company, { cascade: true })
   paymentTransactions: PaymentTransaction[];
 }
+

@@ -63,3 +63,4 @@ export class ComplianceObligation {
   @OneToMany(() => ComplianceFiling, (cf) => cf.obligation, { cascade: true })
   complianceFilings: ComplianceFiling[];
 }
+

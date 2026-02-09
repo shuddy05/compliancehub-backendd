@@ -58,7 +58,7 @@ export class TaxRelief {
   @JoinColumn({ name: 'verifiedById' })
   verifiedBy: User;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   verifiedAt: Date;
 
   @Column({ type: 'boolean', default: true })
@@ -70,3 +70,4 @@ export class TaxRelief {
   @UpdateDateColumn()
   updatedAt: Date;
 }
+

@@ -48,10 +48,10 @@ export class CompanyUser {
   @JoinColumn({ name: 'invitedById' })
   invitedBy: User;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   invitedAt: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   acceptedAt: Date;
 
   @Column({ type: 'text', nullable: true })
@@ -66,3 +66,4 @@ export class CompanyUser {
   @UpdateDateColumn()
   updatedAt: Date;
 }
+

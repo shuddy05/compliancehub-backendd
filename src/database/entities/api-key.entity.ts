@@ -37,7 +37,7 @@ export class ApiKey {
   @Column({ type: 'integer', default: 1000 })
   rateLimit: number; // Requests per month
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   lastUsedAt: Date;
 
   @Column({ type: 'integer', default: 0 })
@@ -46,7 +46,7 @@ export class ApiKey {
   @Column({ type: 'boolean', default: true })
   isActive: boolean;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   expiresAt: Date;
 
   @Column({ type: 'uuid', nullable: true })
@@ -62,3 +62,4 @@ export class ApiKey {
   @UpdateDateColumn()
   updatedAt: Date;
 }
+

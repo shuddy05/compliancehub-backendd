@@ -56,9 +56,10 @@ export class PaymentTransaction {
   @Column({ type: 'simple-json', nullable: true })
   metadata: Record<string, any>;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'datetime' })
   initiatedAt: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   completedAt: Date;
 }
+

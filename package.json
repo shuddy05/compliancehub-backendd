@@ -7,8 +7,8 @@
     "create-super-admin": "node dist/scripts/create-super-admin.js",
     "create-support-staff": "node dist/scripts/create-support-staff.js",
     "build": "nest build",
-    "start": "node dist/src/app.js",
-    "start:prod": "node dist/src/app.js",
+    "start": "node dist/src/main.js",
+    "start:prod": "node dist/src/main.js",
     "start:dev": "nest start --watch",
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.ts\"",
@@ -55,6 +55,7 @@
     "@types/canvas-confetti": "^1.9.0",
     "axios": "^1.13.2",
     "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^12.6.2",
     "canvas-confetti": "^1.9.4",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.3",
@@ -83,12 +84,12 @@
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "sonner": "^1.7.4",
+    "speakeasy": "^2.0.0",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
     "typeorm": "^0.3.28",
     "vaul": "^0.9.9",
-    "zod": "^3.25.76",
-    "speakeasy": "^2.0.0"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",

@@ -1,6 +1,5 @@
 import 'reflect-metadata';
 import { DataSource } from 'typeorm';
-import { databaseConfig } from '../src/config/database.config';
 import { User } from '../src/database/entities/user.entity';
 import { Company } from '../src/database/entities/company.entity';
 import { CompanyUser } from '../src/database/entities/company-user.entity';
@@ -14,9 +13,19 @@ async function main() {
     process.exit(1);
   }
 
-  const dsOptions = databaseConfig();
-  // databaseConfig returns a Nest TypeOrmModuleOptions object; coerce to DataSource options
-  const ds = new DataSource({ ...(dsOptions as any), synchronize: true } as any);
+  // Use mysql2 driver instead of mysql for better auth support
+  const ds = new DataSource({
+    type: 'mysql',
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '3306'),
+    username: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'compliancehub_db',
+    synchronize: false,
+    logging: false,
+    entities: [User, Company, CompanyUser],
+    driver: require('mysql2') as any,
+  } as any);
 
   console.log('Connecting to database...');
   await ds.initialize();

@@ -81,10 +81,10 @@ export class ComplianceFiling {
   @Column({ type: 'simple-json', nullable: true })
   supportingDocuments: Array<{ name: string; url: string }>;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   reminderSentAt: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   overdueNoticeSentAt: Date;
 
   @Column({ type: 'text', nullable: true })
@@ -103,3 +103,4 @@ export class ComplianceFiling {
   @UpdateDateColumn()
   updatedAt: Date;
 }
+

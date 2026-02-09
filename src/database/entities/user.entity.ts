@@ -53,7 +53,7 @@ export class User {
   @Column({ type: 'text', nullable: true })
   totpTempSecret: string | null;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   lastLogin: Date;
 
   // Preferences
@@ -73,7 +73,7 @@ export class User {
   @Column({ type: 'integer', default: 1 })
   onboardingStep: number;
 
-  @Column({ type: 'simple-json', default: '[]' })
+  @Column({ type: 'simple-json', nullable: true })
   coachMarksSeen: string[];
 
   @Column({ type: 'boolean', default: true })
@@ -107,3 +107,4 @@ export class User {
   @OneToMany(() => ApiKey, (ak) => ak.createdBy)
   apiKeys: ApiKey[];
 }
+

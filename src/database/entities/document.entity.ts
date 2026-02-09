@@ -58,3 +58,4 @@ export class Document {
   @CreateDateColumn()
   uploadedAt: Date;
 }
+
